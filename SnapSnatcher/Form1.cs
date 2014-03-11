@@ -388,6 +388,7 @@ namespace SnapSnatcher
                 this.autoStart = false;
                 this.chkAutostart.Checked = false;
                 this.connector.SetAppSetting("autostart", this.autoStart.ToString());
+                this.Restore();
             }
         }
 
