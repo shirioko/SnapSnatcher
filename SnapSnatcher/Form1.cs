@@ -22,6 +22,8 @@ namespace SnapSnatcher
         protected string username;
         protected string authToken;
 
+        protected static bool Run = false;
+
         protected Thread listener;
 
         protected bool dlSnaps = false;
@@ -109,12 +111,15 @@ namespace SnapSnatcher
             //disable controls
             this.grpAuth.Enabled = false;
             this.grpSettings.Enabled = false;
+            this.btnStop.Visible = true;
             
             //hide
             this.Visible = false;
             this.ShowInTaskbar = false;
 
             this.snapconnector = new SnapConnector(this.username, this.authToken);
+
+            Run = true;
 
             this.listener = new Thread(new ThreadStart(Listen));
             this.listener.IsBackground = true;
@@ -154,11 +159,11 @@ namespace SnapSnatcher
         protected void Listen()
         {
             int timeout = (int)(this.interval * 1000);//milliseconds
-            while (this.FetchUpdates())
+            while (Run && this.FetchUpdates())
             {
                 Thread.Sleep(timeout);
             }
-            this.onAuthError();
+            this.ResetFormState();
         }
 
         protected bool FetchUpdates()
@@ -242,12 +247,14 @@ namespace SnapSnatcher
                 {
                     MessageBox.Show(wex.Message, "WebException in listener thread", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                this.autoStart = false;
                 return false;
             }
             catch (Exception ex)
             {
                 //TODO: log
                 MessageBox.Show(ex.Message, "General Exception in listener thread", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.autoStart = false;
                 return false;
             }
             return true;
@@ -367,12 +374,12 @@ namespace SnapSnatcher
             File.WriteAllBytes(filename, image);
         }
 
-        protected delegate void onAuthErrorDelegate();
-        protected void onAuthError()
+        protected delegate void NoArgumentDelegate();
+        protected void ResetFormState()
         {
             if (this.InvokeRequired)
             {
-                onAuthErrorDelegate d = new onAuthErrorDelegate(onAuthError);
+                NoArgumentDelegate d = new NoArgumentDelegate(ResetFormState);
                 this.Invoke(d);
             }
             else
@@ -380,8 +387,7 @@ namespace SnapSnatcher
                //reset
                 this.grpAuth.Enabled = true;
                 this.grpSettings.Enabled = true;
-                this.autoStart = false;
-                this.chkAutostart.Checked = false;
+                this.chkAutostart.Checked = this.autoStart;
                 this.connector.SetAppSetting("autostart", this.autoStart.ToString());
                 this.Restore();
             }
@@ -469,6 +475,12 @@ namespace SnapSnatcher
         private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
         {
             this.OpenSnapsFolder();
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            this.btnStop.Visible = false;
+            Run = false;
         }
     }
 }

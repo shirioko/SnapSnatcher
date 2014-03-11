@@ -48,8 +48,9 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.itemShow = new System.Windows.Forms.ToolStripMenuItem();
-            this.itemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.itemSnaps = new System.Windows.Forms.ToolStripMenuItem();
+            this.itemExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnStop = new System.Windows.Forms.Button();
             this.grpAuth.SuspendLayout();
             this.grpSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
@@ -255,13 +256,6 @@
             this.itemShow.Text = "Show program";
             this.itemShow.Click += new System.EventHandler(this.itemShow_Click);
             // 
-            // itemExit
-            // 
-            this.itemExit.Name = "itemExit";
-            this.itemExit.Size = new System.Drawing.Size(170, 22);
-            this.itemExit.Text = "Exit";
-            this.itemExit.Click += new System.EventHandler(this.itemExit_Click);
-            // 
             // itemSnaps
             // 
             this.itemSnaps.Name = "itemSnaps";
@@ -269,12 +263,32 @@
             this.itemSnaps.Text = "Open snaps folder";
             this.itemSnaps.Click += new System.EventHandler(this.itemSnaps_Click);
             // 
+            // itemExit
+            // 
+            this.itemExit.Name = "itemExit";
+            this.itemExit.Size = new System.Drawing.Size(170, 22);
+            this.itemExit.Text = "Exit";
+            this.itemExit.Click += new System.EventHandler(this.itemExit_Click);
+            // 
+            // btnStop
+            // 
+            this.btnStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStop.Location = new System.Drawing.Point(137, 168);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(85, 63);
+            this.btnStop.TabIndex = 9;
+            this.btnStop.Text = "Stop";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Visible = false;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
             // Form1
             // 
             this.AcceptButton = this.btnStart;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(244, 246);
+            this.Controls.Add(this.btnStop);
             this.Controls.Add(this.grpSettings);
             this.Controls.Add(this.grpAuth);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -317,6 +331,7 @@
         private System.Windows.Forms.ToolStripMenuItem itemExit;
         private System.Windows.Forms.ToolStripMenuItem itemShow;
         private System.Windows.Forms.ToolStripMenuItem itemSnaps;
+        private System.Windows.Forms.Button btnStop;
     }
 }
 
