@@ -47,8 +47,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.itemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.itemShow = new System.Windows.Forms.ToolStripMenuItem();
+            this.itemExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.itemSnaps = new System.Windows.Forms.ToolStripMenuItem();
             this.grpAuth.SuspendLayout();
             this.grpSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
@@ -241,24 +242,32 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itemShow,
+            this.itemSnaps,
             this.itemExit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(171, 92);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // itemExit
-            // 
-            this.itemExit.Name = "itemExit";
-            this.itemExit.Size = new System.Drawing.Size(152, 22);
-            this.itemExit.Text = "Exit";
-            this.itemExit.Click += new System.EventHandler(this.itemExit_Click);
             // 
             // itemShow
             // 
             this.itemShow.Name = "itemShow";
-            this.itemShow.Size = new System.Drawing.Size(152, 22);
-            this.itemShow.Text = "Show";
+            this.itemShow.Size = new System.Drawing.Size(170, 22);
+            this.itemShow.Text = "Show program";
             this.itemShow.Click += new System.EventHandler(this.itemShow_Click);
+            // 
+            // itemExit
+            // 
+            this.itemExit.Name = "itemExit";
+            this.itemExit.Size = new System.Drawing.Size(170, 22);
+            this.itemExit.Text = "Exit";
+            this.itemExit.Click += new System.EventHandler(this.itemExit_Click);
+            // 
+            // itemSnaps
+            // 
+            this.itemSnaps.Name = "itemSnaps";
+            this.itemSnaps.Size = new System.Drawing.Size(170, 22);
+            this.itemSnaps.Text = "Open snaps folder";
+            this.itemSnaps.Click += new System.EventHandler(this.itemSnaps_Click);
             // 
             // Form1
             // 
@@ -307,6 +316,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem itemExit;
         private System.Windows.Forms.ToolStripMenuItem itemShow;
+        private System.Windows.Forms.ToolStripMenuItem itemSnaps;
     }
 }
 

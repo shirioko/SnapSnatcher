@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace SnapSnatcher
         protected bool dlSnaps = false;
         protected bool dlStories = false;
         protected decimal interval = 1;
+
+        const string SNAPS_FOLDER = "snaps";
 
         const string BLOB_KEY = "TTAyY25RNTFKaTk3dndUNA==";
 
@@ -406,6 +409,22 @@ namespace SnapSnatcher
         private void itemShow_Click(object sender, EventArgs e)
         {
             this.Restore();
+        }
+
+        private void itemSnaps_Click(object sender, EventArgs e)
+        {
+            this.OpenSnapsFolder();
+        }
+
+        protected void OpenSnapsFolder()
+        {
+            string snapsFolder = Path.Combine(Directory.GetCurrentDirectory(), SNAPS_FOLDER);
+            if (!Directory.Exists(snapsFolder))
+            {
+                Directory.CreateDirectory(snapsFolder);
+            }
+
+            Process.Start(snapsFolder);
         }
     }
 }
