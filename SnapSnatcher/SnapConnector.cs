@@ -15,7 +15,6 @@ namespace SnapSnatcher
     {
         protected string username;
         protected string authToken;
-        protected Cache cache;
         const string BASE_URL = "https://feelinsonice-hrd.appspot.com/bq";
         const string VERSION = "4.1.07";
         const string SECRET = "iEk21fuwZApXlz93750dmW22pw389dPwOk";
@@ -27,7 +26,6 @@ namespace SnapSnatcher
         {
             this.username = username;
             this.authToken = authToken;
-            this.cache = new Cache();
         }
 
         public JsonClasses.Snap[] GetSnaps(string data)

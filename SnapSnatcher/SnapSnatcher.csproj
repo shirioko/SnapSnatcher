@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
-    <Compile Include="Cache.cs" />
     <Compile Include="DataConnector.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
