@@ -434,5 +434,10 @@ namespace SnapSnatcher
             Process.Start(snapsFolder);
             this.unseenCounter = 0;
         }
+
+        private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
+        {
+            this.OpenSnapsFolder();
+        }
     }
 }
