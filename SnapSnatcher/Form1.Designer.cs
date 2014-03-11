@@ -168,7 +168,6 @@
             // chkAutostart
             // 
             this.chkAutostart.AutoSize = true;
-            this.chkAutostart.Enabled = false;
             this.chkAutostart.Location = new System.Drawing.Point(12, 92);
             this.chkAutostart.Name = "chkAutostart";
             this.chkAutostart.Size = new System.Drawing.Size(71, 17);
@@ -245,7 +244,7 @@
             this.itemSnaps,
             this.itemExit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(171, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(171, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // itemShow

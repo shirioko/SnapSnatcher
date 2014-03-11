@@ -390,7 +390,14 @@ namespace SnapSnatcher
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-
+            if (this.unseenCounter > 0)
+            {
+                this.contextMenuStrip1.Items["itemSnaps"].Text = string.Format("Open snaps folder ({0})", this.unseenCounter);
+            }
+            else
+            {
+                this.contextMenuStrip1.Items["itemSnaps"].Text = "Open snaps folder";
+            }
         }
 
         private void Form1_Resize(object sender, EventArgs e)
