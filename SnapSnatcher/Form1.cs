@@ -27,7 +27,7 @@ namespace SnapSnatcher
         protected bool dlSnaps = false;
         protected bool dlStories = false;
         protected bool autoStart = false;
-        protected decimal interval = 1;
+        protected decimal interval = 5;
 
         const string SNAPS_FOLDER = "snaps";
 
@@ -68,7 +68,6 @@ namespace SnapSnatcher
             //auto fill
             this.txtUsername.Text = this.username;
             this.txtToken.Text = this.authToken;
-            this.numInterval.Value = this.interval;
             this.chkAutostart.Checked = this.autoStart;
             this.chkSnaps.Checked = this.dlSnaps;
             this.chkStories.Checked = this.dlStories;
@@ -80,6 +79,7 @@ namespace SnapSnatcher
             {
                 this.interval = this.numInterval.Maximum;
             }
+            this.numInterval.Value = this.interval;
             if(this.autoStart && !string.IsNullOrEmpty(this.username) && !string.IsNullOrEmpty(this.authToken))
             {
                 //autostart
