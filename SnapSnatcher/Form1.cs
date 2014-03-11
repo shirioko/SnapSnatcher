@@ -432,6 +432,7 @@ namespace SnapSnatcher
             }
 
             Process.Start(snapsFolder);
+            this.unseenCounter = 0;
         }
     }
 }
