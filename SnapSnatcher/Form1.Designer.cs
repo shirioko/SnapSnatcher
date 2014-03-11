@@ -51,6 +51,9 @@
             this.itemSnaps = new System.Windows.Forms.ToolStripMenuItem();
             this.itemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.btnStop = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtReqToken = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.grpAuth.SuspendLayout();
             this.grpSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
@@ -79,6 +82,9 @@
             // 
             this.grpAuth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpAuth.Controls.Add(this.label6);
+            this.grpAuth.Controls.Add(this.txtReqToken);
+            this.grpAuth.Controls.Add(this.label5);
             this.grpAuth.Controls.Add(this.txtUsername);
             this.grpAuth.Controls.Add(this.label2);
             this.grpAuth.Controls.Add(this.btnLogin);
@@ -87,7 +93,7 @@
             this.grpAuth.Controls.Add(this.txtToken);
             this.grpAuth.Location = new System.Drawing.Point(12, 12);
             this.grpAuth.Name = "grpAuth";
-            this.grpAuth.Size = new System.Drawing.Size(220, 104);
+            this.grpAuth.Size = new System.Drawing.Size(220, 142);
             this.grpAuth.TabIndex = 2;
             this.grpAuth.TabStop = false;
             this.grpAuth.Text = "Authentication";
@@ -112,7 +118,7 @@
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(75, 72);
+            this.btnLogin.Location = new System.Drawing.Point(75, 112);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(60, 23);
             this.btnLogin.TabIndex = 2;
@@ -123,7 +129,7 @@
             // btnRegister
             // 
             this.btnRegister.Enabled = false;
-            this.btnRegister.Location = new System.Drawing.Point(141, 72);
+            this.btnRegister.Location = new System.Drawing.Point(141, 112);
             this.btnRegister.Name = "btnRegister";
             this.btnRegister.Size = new System.Drawing.Size(69, 23);
             this.btnRegister.TabIndex = 3;
@@ -139,7 +145,7 @@
             this.grpSettings.Controls.Add(this.chkSnaps);
             this.grpSettings.Controls.Add(this.chkStories);
             this.grpSettings.Controls.Add(this.label3);
-            this.grpSettings.Location = new System.Drawing.Point(12, 122);
+            this.grpSettings.Location = new System.Drawing.Point(12, 164);
             this.grpSettings.Name = "grpSettings";
             this.grpSettings.Size = new System.Drawing.Size(220, 116);
             this.grpSettings.TabIndex = 4;
@@ -273,7 +279,7 @@
             // btnStop
             // 
             this.btnStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStop.Location = new System.Drawing.Point(137, 168);
+            this.btnStop.Location = new System.Drawing.Point(137, 210);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(85, 63);
             this.btnStop.TabIndex = 9;
@@ -282,12 +288,37 @@
             this.btnStop.Visible = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(75, 69);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(16, 13);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "or";
+            // 
+            // txtReqToken
+            // 
+            this.txtReqToken.Location = new System.Drawing.Point(75, 86);
+            this.txtReqToken.Name = "txtReqToken";
+            this.txtReqToken.Size = new System.Drawing.Size(135, 20);
+            this.txtReqToken.TabIndex = 6;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 89);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(61, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Req Token";
+            // 
             // Form1
             // 
             this.AcceptButton = this.btnStart;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 246);
+            this.ClientSize = new System.Drawing.Size(244, 291);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.grpSettings);
             this.Controls.Add(this.grpAuth);
@@ -332,6 +363,9 @@
         private System.Windows.Forms.ToolStripMenuItem itemShow;
         private System.Windows.Forms.ToolStripMenuItem itemSnaps;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtReqToken;
+        private System.Windows.Forms.Label label5;
     }
 }
 
