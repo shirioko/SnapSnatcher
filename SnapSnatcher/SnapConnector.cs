@@ -23,10 +23,11 @@ namespace SnapSnatcher
         const string USER_AGENT = "Snapchat/4.1.07 (Nexus 4; Android 18; gzip)";
         const string STATIC_TOKEN = "m198sOkJEn37DjqZ32lpRu76xmw288xSQ9";
 
-        public SnapConnector(string username, string authToken)
+        public SnapConnector(string username, string authToken, string reqToken)
         {
             this.username = username;
             this.authToken = authToken;
+            this.reqToken = reqToken;
         }
 
         public JsonClasses.Snap[] GetSnaps(string data)
@@ -80,7 +81,7 @@ namespace SnapSnatcher
 
         protected string getReqToken(string timestamp)
         {
-            if (string.IsNullOrEmpty(this.authToken))
+            if (!string.IsNullOrEmpty(this.reqToken))
             {
                 //forge from req token (exploit)
                 return this.forgeReqToken(timestamp);

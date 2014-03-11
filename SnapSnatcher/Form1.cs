@@ -21,6 +21,7 @@ namespace SnapSnatcher
         protected int unseenCounter = 0;
         protected string username;
         protected string authToken;
+        protected string reqToken;
 
         protected static bool Run = false;
 
@@ -44,6 +45,7 @@ namespace SnapSnatcher
             this.connector = new DataConnector();
             this.username = this.connector.GetAppSetting("username");
             this.authToken = this.connector.GetAppSetting("auth_token");
+            this.reqToken = this.connector.GetAppSetting("req_token");
             if (!Decimal.TryParse(this.connector.GetAppSetting("interval"), out this.interval))
             {
                 this.interval = 1;
@@ -82,6 +84,7 @@ namespace SnapSnatcher
             //auto fill
             this.txtUsername.Text = this.username;
             this.txtToken.Text = this.authToken;
+            this.txtReqToken.Text = this.reqToken;
             this.chkAutostart.Checked = this.autoStart;
             this.chkSnaps.Checked = this.dlSnaps;
             this.chkStories.Checked = this.dlStories;
@@ -94,7 +97,8 @@ namespace SnapSnatcher
                 this.interval = this.numInterval.Maximum;
             }
             this.numInterval.Value = this.interval;
-            if(this.autoStart && !string.IsNullOrEmpty(this.username) && !string.IsNullOrEmpty(this.authToken))
+            if(this.autoStart && !string.IsNullOrEmpty(this.username) &&
+                (!string.IsNullOrEmpty(this.authToken) || !string.IsNullOrEmpty(this.reqToken)))
             {
                 //autostart
                 this.Start();
@@ -129,7 +133,7 @@ namespace SnapSnatcher
             this.Visible = false;
             this.ShowInTaskbar = false;
 
-            this.snapconnector = new SnapConnector(this.username, this.authToken);
+            this.snapconnector = new SnapConnector(this.username, this.authToken, this.reqToken);
 
             Run = true;
 
@@ -143,10 +147,11 @@ namespace SnapSnatcher
             //validate credentials presence
             this.username = this.txtUsername.Text;
             this.authToken = this.txtToken.Text;
-            if (string.IsNullOrEmpty(this.username) || string.IsNullOrEmpty(this.authToken))
+            this.reqToken = this.txtReqToken.Text;
+            if (string.IsNullOrEmpty(this.username) || (string.IsNullOrEmpty(this.authToken) && string.IsNullOrEmpty(this.reqToken)))
             {
                 //show error
-                MessageBox.Show("Please enter username and auth token", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Please enter username and auth token or req token", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -162,6 +167,7 @@ namespace SnapSnatcher
                 this.connector.SetAppSetting("dlsnaps", this.dlSnaps.ToString());
                 this.connector.SetAppSetting("dlstories", this.dlStories.ToString());
                 this.connector.SetAppSetting("autostart", this.autoStart.ToString());
+                this.connector.SetAppSetting("req_token", this.reqToken);
 
                 //start doing shit
                 this.Start();

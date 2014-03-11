@@ -29,7 +29,7 @@ namespace SnapSnatcher
             {
                 this.username = this.txtUsername.Text;
                 string password = this.txtPassword.Text;
-                SnapConnector sc = new SnapConnector(this.username, null);
+                SnapConnector sc = new SnapConnector(this.username, null, null);
                 string result = sc.Login(this.txtUsername.Text, this.txtPassword.Text);
                 JObject jsonResult = JObject.Parse(result);
                 JToken logged = jsonResult["logged"];
