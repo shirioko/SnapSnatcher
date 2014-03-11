@@ -46,14 +46,6 @@ namespace SnapSnatcher
             {
                 this.interval = 1;
             }
-            if (this.interval < this.numInterval.Minimum)
-            {
-                this.interval = this.numInterval.Minimum;
-            }
-            if (this.interval > this.numInterval.Maximum)
-            {
-                this.interval = this.numInterval.Maximum;
-            }
             bool foo = true;
             if (bool.TryParse(this.connector.GetAppSetting("dlsnaps"), out foo))
             {
@@ -72,13 +64,27 @@ namespace SnapSnatcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
             //auto fill
             this.txtUsername.Text = this.username;
             this.txtToken.Text = this.authToken;
             this.numInterval.Value = this.interval;
             this.chkAutostart.Checked = this.autoStart;
-            this.chkSnaps.Checked = this.dlSnaps
+            this.chkSnaps.Checked = this.dlSnaps;
             this.chkStories.Checked = this.dlStories;
+            if (this.interval < this.numInterval.Minimum)
+            {
+                this.interval = this.numInterval.Minimum;
+            }
+            if (this.interval > this.numInterval.Maximum)
+            {
+                this.interval = this.numInterval.Maximum;
+            }
+            if(this.autoStart && !string.IsNullOrEmpty(this.username) && !string.IsNullOrEmpty(this.authToken))
+            {
+                //autostart
+                this.Start();
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -96,6 +102,18 @@ namespace SnapSnatcher
                 this.connector.SetAppSetting("username", this.username);
                 this.connector.SetAppSetting("auth_token", this.authToken);
             }
+        }
+
+        protected void Start()
+        {
+            this.snapconnector = new SnapConnector(this.username, this.authToken);
+            this.listener = new Thread(new ThreadStart(Listen));
+            this.listener.IsBackground = true;
+            this.listener.Start();
+
+            //hide
+            this.Visible = false;
+            this.ShowInTaskbar = false;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -128,14 +146,7 @@ namespace SnapSnatcher
                 this.connector.SetAppSetting("autostart", this.autoStart.ToString());
 
                 //start doing shit
-                this.snapconnector = new SnapConnector(this.username, this.authToken);
-                this.listener = new Thread(new ThreadStart(Listen));
-                this.listener.IsBackground = true;
-                this.listener.Start();
-
-                //hide
-                this.Visible = false;
-                this.ShowInTaskbar = false;
+                this.Start();
             }
         }
 
@@ -374,6 +385,9 @@ namespace SnapSnatcher
                //reset
                 this.grpAuth.Enabled = true;
                 this.grpSettings.Enabled = true;
+                this.autoStart = false;
+                this.chkAutostart.Checked = false;
+                this.connector.SetAppSetting("autostart", this.autoStart.ToString());
             }
         }
 
