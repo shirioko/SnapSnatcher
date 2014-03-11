@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>snapsnather.ico</ApplicationIcon>
+    <ApplicationIcon>snapsnatcher.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -99,7 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="snapsnather.ico" />
+    <Content Include="snapsnatcher.ico" />
     <Content Include="sqlite3.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
