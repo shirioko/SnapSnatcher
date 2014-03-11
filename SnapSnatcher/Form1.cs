@@ -39,18 +39,9 @@ namespace SnapSnatcher
         
         public Form1()
         {
-            InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
             this.connector = new DataConnector();
-
-            //auto fill
             this.username = this.connector.GetAppSetting("username");
-            this.txtUsername.Text = this.username;
             this.authToken = this.connector.GetAppSetting("auth_token");
-            this.txtToken.Text = this.authToken;
             if (!Decimal.TryParse(this.connector.GetAppSetting("interval"), out this.interval))
             {
                 this.interval = 1;
@@ -63,23 +54,31 @@ namespace SnapSnatcher
             {
                 this.interval = this.numInterval.Maximum;
             }
-            this.numInterval.Value = this.interval;
             bool foo = true;
             if (bool.TryParse(this.connector.GetAppSetting("dlsnaps"), out foo))
             {
                 this.dlSnaps = foo;
-                this.chkSnaps.Checked = foo;
             }
-            if(bool.TryParse(this.connector.GetAppSetting("dlstories"), out foo))
+            if (bool.TryParse(this.connector.GetAppSetting("dlstories"), out foo))
             {
                 this.dlStories = foo;
-                this.chkStories.Checked = foo;
             }
             if (bool.TryParse(this.connector.GetAppSetting("autostart"), out foo))
             {
                 this.autoStart = foo;
-                this.chkAutostart.Checked = foo;
             }
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //auto fill
+            this.txtUsername.Text = this.username;
+            this.txtToken.Text = this.authToken;
+            this.numInterval.Value = this.interval;
+            this.chkAutostart.Checked = this.autoStart;
+            this.chkSnaps.Checked = this.dlSnaps
+            this.chkStories.Checked = this.dlStories;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
