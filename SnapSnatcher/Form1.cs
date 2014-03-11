@@ -53,13 +53,25 @@ namespace SnapSnatcher
             {
                 this.dlSnaps = foo;
             }
+            else
+            {
+                this.dlSnaps = true;
+            }
             if (bool.TryParse(this.connector.GetAppSetting("dlstories"), out foo))
             {
                 this.dlStories = foo;
             }
+            else
+            {
+                this.dlStories = true;
+            }
             if (bool.TryParse(this.connector.GetAppSetting("autostart"), out foo))
             {
                 this.autoStart = foo;
+            }
+            else
+            {
+                this.autoStart = false;
             }
             InitializeComponent();
         }
