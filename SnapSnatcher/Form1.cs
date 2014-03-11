@@ -106,14 +106,19 @@ namespace SnapSnatcher
 
         protected void Start()
         {
-            this.snapconnector = new SnapConnector(this.username, this.authToken);
-            this.listener = new Thread(new ThreadStart(Listen));
-            this.listener.IsBackground = true;
-            this.listener.Start();
-
+            //disable controls
+            this.grpAuth.Enabled = false;
+            this.grpSettings.Enabled = false;
+            
             //hide
             this.Visible = false;
             this.ShowInTaskbar = false;
+
+            this.snapconnector = new SnapConnector(this.username, this.authToken);
+
+            this.listener = new Thread(new ThreadStart(Listen));
+            this.listener.IsBackground = true;
+            this.listener.Start();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -132,10 +137,6 @@ namespace SnapSnatcher
                 this.dlSnaps = this.chkSnaps.Checked;
                 this.dlStories = this.chkStories.Checked;
                 this.autoStart = this.chkAutostart.Checked;
-
-                //disable controls
-                this.grpAuth.Enabled = false;
-                this.grpSettings.Enabled = false;
 
                 //update config
                 this.connector.SetAppSetting("username", this.username);
@@ -185,10 +186,7 @@ namespace SnapSnatcher
                                         image = decryptECB(image);
                                     }
                                     this.SaveMedia(image, snap);
-                                    if (this.Visible == false)
-                                    {
-                                        this.NotifyTray(snap);
-                                    }
+                                    this.NotifyTray(snap);
                                 }
                                 catch (WebException w)
                                 {
@@ -218,10 +216,7 @@ namespace SnapSnatcher
                                 {
                                     byte[] image = this.snapconnector.GetStoryMedia(story.media_id, story.media_key, story.media_iv);
                                     this.SaveMedia(image, story);
-                                    if (this.Visible == false)
-                                    {
-                                        this.NotifyTray(story);
-                                    }
+                                    this.NotifyTray(story);
                                 }
                                 catch (WebException w)
                                 {
@@ -468,6 +463,7 @@ namespace SnapSnatcher
 
             Process.Start(snapsFolder);
             this.unseenCounter = 0;
+            this.UpdateNotifyText();
         }
 
         private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
