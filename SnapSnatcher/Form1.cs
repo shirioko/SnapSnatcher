@@ -26,6 +26,7 @@ namespace SnapSnatcher
 
         protected bool dlSnaps = false;
         protected bool dlStories = false;
+        protected bool autoStart = false;
         protected decimal interval = 1;
 
         const string SNAPS_FOLDER = "snaps";
@@ -63,6 +64,22 @@ namespace SnapSnatcher
                 this.interval = this.numInterval.Maximum;
             }
             this.numInterval.Value = this.interval;
+            bool foo = true;
+            if (bool.TryParse(this.connector.GetAppSetting("dlsnaps"), out foo))
+            {
+                this.dlSnaps = foo;
+                this.chkSnaps.Checked = foo;
+            }
+            if(bool.TryParse(this.connector.GetAppSetting("dlstories"), out foo))
+            {
+                this.dlStories = foo;
+                this.chkStories.Checked = foo;
+            }
+            if (bool.TryParse(this.connector.GetAppSetting("autostart"), out foo))
+            {
+                this.autoStart = foo;
+                this.chkAutostart.Checked = foo;
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -97,6 +114,7 @@ namespace SnapSnatcher
                 //read settings
                 this.dlSnaps = this.chkSnaps.Checked;
                 this.dlStories = this.chkStories.Checked;
+                this.autoStart = this.chkAutostart.Checked;
 
                 //disable controls
                 this.grpAuth.Enabled = false;
@@ -106,6 +124,9 @@ namespace SnapSnatcher
                 this.connector.SetAppSetting("username", this.username);
                 this.connector.SetAppSetting("auth_token", this.authToken);
                 this.connector.SetAppSetting("interval", this.interval.ToString());
+                this.connector.SetAppSetting("dlsnaps", this.dlSnaps.ToString());
+                this.connector.SetAppSetting("dlstories", this.dlStories.ToString());
+                this.connector.SetAppSetting("autostart", this.autoStart.ToString());
 
                 //start doing shit
                 this.snapconnector = new SnapConnector(this.username, this.authToken);
