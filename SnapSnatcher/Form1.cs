@@ -215,7 +215,7 @@ namespace SnapSnatcher
                                 {
                                     //too bad
                                     HttpWebResponse resp = w.Response as HttpWebResponse;
-                                    if (resp.StatusCode != HttpStatusCode.Gone)
+                                    if (resp.StatusCode != HttpStatusCode.Gone && resp.StatusCode != HttpStatusCode.InternalServerError)
                                     {
                                         throw w;
                                     }
@@ -260,6 +260,11 @@ namespace SnapSnatcher
                 if (resp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     MessageBox.Show("Invalid credentials", "Auth error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (resp.StatusCode == HttpStatusCode.InternalServerError)
+                {
+                    //shit happens
+                    return true;
                 }
                 else
                 {
@@ -403,6 +408,7 @@ namespace SnapSnatcher
             else
             {
                //reset
+                this.btnStop.Visible = false;
                 this.grpAuth.Enabled = true;
                 this.grpSettings.Enabled = true;
                 this.chkAutostart.Checked = this.autoStart;
