@@ -90,14 +90,18 @@ namespace SnapSnatcher
                             oS.utilDecodeRequest();
                             oS.utilDecodeResponse();
 
-                            JObject obj = JObject.Parse(oS.GetResponseBodyAsString());
-                            JToken tok = obj["auth_token"];
-                            JToken uname = obj["username"];
-                            if (tok != null && uname != null)
+                            string responseBody = oS.GetResponseBodyAsString();
+                            if (!string.IsNullOrEmpty(responseBody))
                             {
-                                this.authToken = tok.ToObject<string>();
-                                this.username = uname.ToObject<string>();
-                                this.OnSuccess();
+                                JObject obj = JObject.Parse(responseBody);
+                                JToken tok = obj["auth_token"];
+                                JToken uname = obj["username"];
+                                if (tok != null && uname != null)
+                                {
+                                    this.authToken = tok.ToObject<string>();
+                                    this.username = uname.ToObject<string>();
+                                    this.OnSuccess();
+                                }
                             }
                         }
                         catch (Exception ex)
