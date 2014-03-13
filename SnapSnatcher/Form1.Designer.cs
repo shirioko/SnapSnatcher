@@ -33,6 +33,9 @@
             this.txtToken = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.grpAuth = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtReqToken = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnLogin = new System.Windows.Forms.Button();
@@ -51,9 +54,7 @@
             this.itemSnaps = new System.Windows.Forms.ToolStripMenuItem();
             this.itemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.btnStop = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtReqToken = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.btnCapture = new System.Windows.Forms.Button();
             this.grpAuth.SuspendLayout();
             this.grpSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
@@ -82,6 +83,7 @@
             // 
             this.grpAuth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpAuth.Controls.Add(this.btnCapture);
             this.grpAuth.Controls.Add(this.label6);
             this.grpAuth.Controls.Add(this.txtReqToken);
             this.grpAuth.Controls.Add(this.label5);
@@ -97,6 +99,31 @@
             this.grpAuth.TabIndex = 2;
             this.grpAuth.TabStop = false;
             this.grpAuth.Text = "Authentication";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 89);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(61, 13);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Req Token";
+            // 
+            // txtReqToken
+            // 
+            this.txtReqToken.Location = new System.Drawing.Point(75, 86);
+            this.txtReqToken.Name = "txtReqToken";
+            this.txtReqToken.Size = new System.Drawing.Size(135, 20);
+            this.txtReqToken.TabIndex = 6;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(75, 69);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(16, 13);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "or";
             // 
             // txtUsername
             // 
@@ -288,30 +315,15 @@
             this.btnStop.Visible = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
-            // label5
+            // btnCapture
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(75, 69);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(16, 13);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "or";
-            // 
-            // txtReqToken
-            // 
-            this.txtReqToken.Location = new System.Drawing.Point(75, 86);
-            this.txtReqToken.Name = "txtReqToken";
-            this.txtReqToken.Size = new System.Drawing.Size(135, 20);
-            this.txtReqToken.TabIndex = 6;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 89);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(61, 13);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Req Token";
+            this.btnCapture.Location = new System.Drawing.Point(7, 112);
+            this.btnCapture.Name = "btnCapture";
+            this.btnCapture.Size = new System.Drawing.Size(62, 23);
+            this.btnCapture.TabIndex = 8;
+            this.btnCapture.Text = "Capture";
+            this.btnCapture.UseVisualStyleBackColor = true;
+            this.btnCapture.Click += new System.EventHandler(this.btnCapture_Click);
             // 
             // Form1
             // 
@@ -366,6 +378,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtReqToken;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnCapture;
     }
 }
 
