@@ -459,13 +459,7 @@ namespace SnapSnatcher
 
         protected void OpenSnapsFolder()
         {
-            string snapsFolder = Path.Combine(Directory.GetCurrentDirectory(), SNAPS_FOLDER);
-            if (!Directory.Exists(snapsFolder))
-            {
-                Directory.CreateDirectory(snapsFolder);
-            }
-
-            Process.Start(snapsFolder);
+            Process.Start(this.path);
             this.unseenCounter = 0;
             this.UpdateNotifyText();
         }
