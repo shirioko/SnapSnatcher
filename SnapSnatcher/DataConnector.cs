@@ -7,9 +7,21 @@ using System.Threading.Tasks;
 
 namespace SnapSnatcher
 {
-    internal class DataConnector
+    public class DataConnector
     {
         protected SQLiteConnection connection;
+
+        public class Settings
+        {
+            public const string INTERVAL    = "interval";
+            public const string USERNAME    = "username";
+            public const string AUTH_TOKEN  = "auth_token";
+            public const string DL_SNAPS    = "dl_snaps";
+            public const string DL_STORIES  = "dl_stories";
+            public const string AUTOSTART = "autostart";
+            public const string REQ_TOKEN   = "req_token";
+            public const string PATH        = "path";
+        }
 
         public DataConnector()
         {

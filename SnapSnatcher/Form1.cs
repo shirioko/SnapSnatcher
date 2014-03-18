@@ -22,6 +22,7 @@ namespace SnapSnatcher
         protected string username;
         protected string authToken;
         protected string reqToken;
+        protected string path;
 
         protected static bool Run = false;
 
@@ -43,15 +44,20 @@ namespace SnapSnatcher
         public Form1()
         {
             this.connector = new DataConnector();
-            this.username = this.connector.GetAppSetting("username");
-            this.authToken = this.connector.GetAppSetting("auth_token");
-            this.reqToken = this.connector.GetAppSetting("req_token");
-            if (!Decimal.TryParse(this.connector.GetAppSetting("interval"), out this.interval))
+            this.username = this.connector.GetAppSetting(DataConnector.Settings.USERNAME);
+            this.authToken = this.connector.GetAppSetting(DataConnector.Settings.AUTH_TOKEN);
+            this.reqToken = this.connector.GetAppSetting(DataConnector.Settings.REQ_TOKEN);
+            this.path = this.connector.GetAppSetting(DataConnector.Settings.PATH);
+            if (string.IsNullOrEmpty(this.path) || !Directory.Exists(this.path))
+            {
+                this.path = Path.Combine(Directory.GetCurrentDirectory(), "snaps");
+            }
+            if (!Decimal.TryParse(this.connector.GetAppSetting(DataConnector.Settings.INTERVAL), out this.interval))
             {
                 this.interval = 1;
             }
             bool foo = true;
-            if (bool.TryParse(this.connector.GetAppSetting("dlsnaps"), out foo))
+            if (bool.TryParse(this.connector.GetAppSetting(DataConnector.Settings.DL_SNAPS), out foo))
             {
                 this.dlSnaps = foo;
             }
@@ -59,7 +65,7 @@ namespace SnapSnatcher
             {
                 this.dlSnaps = true;
             }
-            if (bool.TryParse(this.connector.GetAppSetting("dlstories"), out foo))
+            if (bool.TryParse(this.connector.GetAppSetting(DataConnector.Settings.DL_STORIES), out foo))
             {
                 this.dlStories = foo;
             }
@@ -67,7 +73,7 @@ namespace SnapSnatcher
             {
                 this.dlStories = true;
             }
-            if (bool.TryParse(this.connector.GetAppSetting("autostart"), out foo))
+            if (bool.TryParse(this.connector.GetAppSetting(DataConnector.Settings.AUTOSTART), out foo))
             {
                 this.autoStart = foo;
             }
@@ -85,18 +91,6 @@ namespace SnapSnatcher
             this.txtUsername.Text = this.username;
             this.txtToken.Text = this.authToken;
             this.txtReqToken.Text = this.reqToken;
-            this.chkAutostart.Checked = this.autoStart;
-            this.chkSnaps.Checked = this.dlSnaps;
-            this.chkStories.Checked = this.dlStories;
-            if (this.interval < this.numInterval.Minimum)
-            {
-                this.interval = this.numInterval.Minimum;
-            }
-            if (this.interval > this.numInterval.Maximum)
-            {
-                this.interval = this.numInterval.Maximum;
-            }
-            this.numInterval.Value = this.interval;
             if(this.autoStart && !string.IsNullOrEmpty(this.username) &&
                 (!string.IsNullOrEmpty(this.authToken) || !string.IsNullOrEmpty(this.reqToken)))
             {
@@ -117,8 +111,8 @@ namespace SnapSnatcher
                 this.authToken = l.authToken;
                 this.txtUsername.Text = this.username;
                 this.txtToken.Text = this.authToken;
-                this.connector.SetAppSetting("username", this.username);
-                this.connector.SetAppSetting("auth_token", this.authToken);
+                this.connector.SetAppSetting(DataConnector.Settings.USERNAME, this.username);
+                this.connector.SetAppSetting(DataConnector.Settings.AUTH_TOKEN, this.authToken);
             }
         }
 
@@ -126,7 +120,6 @@ namespace SnapSnatcher
         {
             //disable controls
             this.grpAuth.Enabled = false;
-            this.grpSettings.Enabled = false;
             this.btnStop.Visible = true;
             
             //hide
@@ -155,19 +148,10 @@ namespace SnapSnatcher
             }
             else
             {
-                //read settings
-                this.dlSnaps = this.chkSnaps.Checked;
-                this.dlStories = this.chkStories.Checked;
-                this.autoStart = this.chkAutostart.Checked;
-
                 //update config
-                this.connector.SetAppSetting("username", this.username);
-                this.connector.SetAppSetting("auth_token", this.authToken);
-                this.connector.SetAppSetting("interval", this.interval.ToString());
-                this.connector.SetAppSetting("dlsnaps", this.dlSnaps.ToString());
-                this.connector.SetAppSetting("dlstories", this.dlStories.ToString());
-                this.connector.SetAppSetting("autostart", this.autoStart.ToString());
-                this.connector.SetAppSetting("req_token", this.reqToken);
+                this.connector.SetAppSetting(DataConnector.Settings.USERNAME, this.username);
+                this.connector.SetAppSetting(DataConnector.Settings.AUTH_TOKEN, this.authToken);
+                this.connector.SetAppSetting(DataConnector.Settings.REQ_TOKEN, this.reqToken);
 
                 //start doing shit
                 this.Start();
@@ -379,21 +363,13 @@ namespace SnapSnatcher
 
         private void SaveMedia(byte[] image, JsonClasses.Snap snap)
         {
-            if (!Directory.Exists("snaps"))
-            {
-                Directory.CreateDirectory("snaps");
-            }
-            string filename = string.Format("snaps\\{0}-{1}.{2}", snap.sn, snap.id, snap.m == 0 ? "jpg" : "mov");
+            string filename = Path.Combine(this.path, string.Format("{0}-{1}.{2}", snap.sn, snap.id, snap.m == 0 ? "jpg" : "mov"));
             File.WriteAllBytes(filename, image);
         }
 
         private void SaveMedia(byte[] image, JsonClasses.Story story)
         {
-            if (!Directory.Exists("snaps"))
-            {
-                Directory.CreateDirectory("snaps");
-            }
-            string filename = string.Format("snaps\\{0}.{1}", story.id, story.media_type == 0 ? "jpg" : "mov");
+            string filename = Path.Combine(this.path, string.Format("{0}.{1}", story.id, story.media_type == 0 ? "jpg" : "mov"));
             File.WriteAllBytes(filename, image);
         }
 
@@ -410,8 +386,6 @@ namespace SnapSnatcher
                //reset
                 this.btnStop.Visible = false;
                 this.grpAuth.Enabled = true;
-                this.grpSettings.Enabled = true;
-                this.chkAutostart.Checked = this.autoStart;
                 this.connector.SetAppSetting("autostart", this.autoStart.ToString());
                 this.Restore();
             }
@@ -518,9 +492,24 @@ namespace SnapSnatcher
                 this.username = cap.username;
                 this.txtToken.Text = this.authToken;
                 this.txtUsername.Text = this.username;
-                this.connector.SetAppSetting("auth_token", this.authToken);
-                this.connector.SetAppSetting("username", this.username);
+                this.connector.SetAppSetting(DataConnector.Settings.AUTH_TOKEN, this.authToken);
+                this.connector.SetAppSetting(DataConnector.Settings.USERNAME, this.username);
                 MessageBox.Show(string.Format("Captured auth_token for {0}\r\nYou should disable the proxy settings on your mobile device\r\n\r\nPress the [Start] button to start listening to new snaps!", this.username), "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            frmSettings s = new frmSettings(this.connector);
+            DialogResult r = s.ShowDialog(this);
+            if (r == System.Windows.Forms.DialogResult.OK)
+            {
+                //reload settings
+                this.interval = s.interval;
+                this.dlSnaps = s.dlSnaps;
+                this.dlStories = s.dlStories;
+                this.autoStart = s.autoStart;
+                this.path = s.path;
             }
         }
     }
