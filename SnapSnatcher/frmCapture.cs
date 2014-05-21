@@ -17,8 +17,9 @@ namespace SnapSnatcher
 {
     public partial class frmCapture : Form
     {
-        public string username;
-        public string authToken;
+        public string username = string.Empty;
+        public string authToken = string.Empty;
+        public string reqToken = string.Empty;
 
         public frmCapture()
         {
@@ -90,6 +91,7 @@ namespace SnapSnatcher
                             oS.utilDecodeRequest();
                             oS.utilDecodeResponse();
 
+                            //try response body
                             string responseBody = oS.GetResponseBodyAsString();
                             if (!string.IsNullOrEmpty(responseBody))
                             {
@@ -101,6 +103,35 @@ namespace SnapSnatcher
                                     this.authToken = tok.ToObject<string>();
                                     this.username = uname.ToObject<string>();
                                     this.OnSuccess();
+                                    return;
+                                }
+                            }
+
+                            //try request body
+                            string requestBody = oS.GetRequestBodyAsString();
+                            if(!string.IsNullOrEmpty(requestBody))
+                            {
+                                string[] param = requestBody.Split(new char[] { '&' });
+                                string uname = string.Empty;
+                                string reqt = string.Empty;
+                                foreach (string arg in param)
+                                {
+                                    string[] keyval = arg.Split(new char[] { '=' }, 2);
+                                    if (keyval[0] == "username")
+                                    {
+                                        uname = keyval[1];
+                                    }
+                                    else if (keyval[0] == "req_token")
+                                    {
+                                        reqt = keyval[1];
+                                    }
+                                }
+                                if (!string.IsNullOrEmpty(uname) && !string.IsNullOrEmpty(reqt))
+                                {
+                                    this.username = uname;
+                                    this.reqToken = reqt;
+                                    this.OnSuccess();
+                                    return;
                                 }
                             }
                         }
