@@ -482,13 +482,16 @@ namespace SnapSnatcher
             if (res == System.Windows.Forms.DialogResult.OK)
             {
                 //good good
+                this.reqToken = cap.reqToken;
                 this.authToken = cap.authToken;
                 this.username = cap.username;
-                this.txtToken.Text = this.authToken;
+                this.txtReqToken.Text = this.reqToken;
                 this.txtUsername.Text = this.username;
+                this.txtToken.Text = this.authToken;
                 this.connector.SetAppSetting(DataConnector.Settings.AUTH_TOKEN, this.authToken);
                 this.connector.SetAppSetting(DataConnector.Settings.USERNAME, this.username);
-                MessageBox.Show(string.Format("Captured auth_token for {0}\r\nYou should disable the proxy settings on your mobile device\r\n\r\nPress the [Start] button to start listening to new snaps!", this.username), "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.connector.SetAppSetting(DataConnector.Settings.REQ_TOKEN, this.reqToken);
+                MessageBox.Show(string.Format("Captured token for {0}\r\nYou should disable the proxy settings on your mobile device\r\n\r\nPress the [Start] button to start listening to new snaps!", this.username), "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
