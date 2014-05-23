@@ -392,7 +392,6 @@ namespace SnapSnatcher
                     {
                         if (entry.IsFile && entry.Name.StartsWith("media"))
                         {
-                            byte[] result;
                             using (var resultStream = new MemoryStream())
                             {
                                 int size = 2048;
