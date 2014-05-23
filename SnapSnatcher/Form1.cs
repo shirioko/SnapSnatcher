@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -86,7 +87,6 @@ namespace SnapSnatcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
             //auto fill
             this.txtUsername.Text = this.username;
             this.txtToken.Text = this.authToken;
@@ -369,8 +369,52 @@ namespace SnapSnatcher
 
         private void SaveMedia(byte[] image, JsonClasses.Story story)
         {
-            string filename = Path.Combine(this.path, string.Format("{0}.{1}", story.id, story.media_type == 0 ? "jpg" : "mov"));
-            File.WriteAllBytes(filename, image);
+            if (story.zipped)
+            {
+                File.WriteAllBytes("story.zip", image);
+                image = this.Unzip(image);
+            }
+            if (image != null)
+            {
+                string filename = Path.Combine(this.path, string.Format("{0}.{1}", story.id, story.media_type == 0 ? "jpg" : "mov"));
+                File.WriteAllBytes(filename, image);
+            }
+        }
+
+        protected static byte[] Unzip(byte[] zipData)
+        {
+            using (var compressedStream = new MemoryStream(zipData))
+            {
+                using (var zipStream = new ZipInputStream(compressedStream))
+                {
+                    ZipEntry entry;
+                    while ((entry = zipStream.GetNextEntry()) != null)
+                    {
+                        if (entry.IsFile && entry.Name.StartsWith("media"))
+                        {
+                            byte[] result;
+                            using (var resultStream = new MemoryStream())
+                            {
+                                int size = 2048;
+                                byte[] data = new byte[2048];
+                                while (true)
+                                {
+                                    size = zipStream.Read(data, 0, data.Length);
+                                    if (size > 0)
+                                    {
+                                        resultStream.Write(data, 0, size);
+                                    }
+                                    else
+                                    {
+                                        return resultStream.ToArray();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         protected delegate void NoArgumentDelegate();
