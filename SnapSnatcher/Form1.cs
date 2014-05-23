@@ -371,7 +371,6 @@ namespace SnapSnatcher
         {
             if (story.zipped)
             {
-                File.WriteAllBytes("story.zip", image);
                 image = this.Unzip(image);
             }
             if (image != null)
