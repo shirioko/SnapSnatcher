@@ -381,7 +381,7 @@ namespace SnapSnatcher
             }
         }
 
-        protected static byte[] Unzip(byte[] zipData)
+        protected byte[] Unzip(byte[] zipData)
         {
             using (var compressedStream = new MemoryStream(zipData))
             {
