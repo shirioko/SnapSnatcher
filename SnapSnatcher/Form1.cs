@@ -240,22 +240,26 @@ namespace SnapSnatcher
             }
             catch (WebException wex)
             {
-                HttpWebResponse resp = wex.Response as HttpWebResponse;
-                if (resp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (wex.Response != null)
                 {
-                    MessageBox.Show("Invalid credentials", "Auth error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    HttpWebResponse resp = wex.Response as HttpWebResponse;
+                    if (resp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        MessageBox.Show("Invalid credentials", "Auth error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else if (resp.StatusCode == HttpStatusCode.InternalServerError)
+                    {
+                        //shit happens
+                        return true;
+                    }
+                    else
+                    {
+                        MessageBox.Show(wex.Message, "WebException in listener thread", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    this.autoStart = false;
+                    return false;
                 }
-                else if (resp.StatusCode == HttpStatusCode.InternalServerError)
-                {
-                    //shit happens
-                    return true;
-                }
-                else
-                {
-                    MessageBox.Show(wex.Message, "WebException in listener thread", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                this.autoStart = false;
-                return false;
+                return true;
             }
             catch (Exception ex)
             {
