@@ -36,8 +36,6 @@ namespace SnapSnatcher
 
         const string SNAPS_FOLDER = "snaps";
 
-        const string BLOB_KEY = "TTAyY25RNTFKaTk3dndUNA==";
-
         private DataConnector connector;
 
         public SnapConnector snapconnector;
@@ -187,9 +185,9 @@ namespace SnapSnatcher
                                 try
                                 {
                                     byte[] image = this.snapconnector.GetMedia(snap.id);
-                                    if (!isMedia(image))
+                                    if (!SnapConnector.isMedia(image))
                                     {
-                                        image = decryptECB(image);
+                                        image = SnapConnector.decryptECB(image);
                                     }
                                     string filename = this.SaveMedia(image, snap);
                                     this.NotifyTray(snap, filename);
@@ -271,59 +269,6 @@ namespace SnapSnatcher
                 return false;
             }
             return true;
-        }
-
-        protected static bool isMedia(byte[] image)
-        {
-            if (image[0] == 0xff && image[1] == 0xd8)
-            {
-                //jpg
-                return true;
-            }
-            if (image[0] == 0x00 && image[1] == 0x00)
-            {
-                //mp4
-                return true;
-            }
-            return false;
-        }
-
-        protected static byte[] decryptECB(byte[] image)
-        {
-            using (RijndaelManaged rm = new RijndaelManaged())
-            {
-                rm.Mode = CipherMode.ECB;
-                rm.Key = Convert.FromBase64String(BLOB_KEY);
-                rm.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                rm.Padding = PaddingMode.Zeros;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (CryptoStream cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(image, 0, image.Length);
-                        return ms.ToArray();
-                    }
-                }
-            }
-        }
-
-        public static byte[] decryptCBC(byte[] image, string key, string iv)
-        {
-            using (RijndaelManaged rm = new RijndaelManaged())
-            {
-                rm.Mode = CipherMode.CBC;
-                rm.Key = Convert.FromBase64String(key);
-                rm.IV = Convert.FromBase64String(iv);
-                rm.Padding = PaddingMode.Zeros;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (CryptoStream cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(image, 0, image.Length);
-                        return ms.ToArray();
-                    }
-                }
-            }
         }
 
         protected delegate void NotifySnapDelegate(JsonClasses.Snap snap, string file);

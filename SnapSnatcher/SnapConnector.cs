@@ -22,6 +22,7 @@ namespace SnapSnatcher
         const string PATTERN = "0001110111101110001111010101111011010001001110011000110001000110";
         const string USER_AGENT = "Snapchat/4.1.07 (Nexus 4; Android 18; gzip)";
         const string STATIC_TOKEN = "m198sOkJEn37DjqZ32lpRu76xmw288xSQ9";
+        const string BLOB_KEY = "TTAyY25RNTFKaTk3dndUNA==";
 
         public SnapConnector(string username, string authToken, string reqToken)
         {
@@ -252,9 +253,62 @@ namespace SnapSnatcher
             byte[] data = this.get_Raw(string.Format("/story_blob?story_id={0}", media_id));
             if(data != null && data.Length > 0)
             {
-                return Form1.decryptCBC(data, media_key, media_iv);
+                return SnapConnector.decryptCBC(data, media_key, media_iv);
             }
             return data;
+        }
+
+        internal static bool isMedia(byte[] image)
+        {
+            if (image[0] == 0xff && image[1] == 0xd8)
+            {
+                //jpg
+                return true;
+            }
+            if (image[0] == 0x00 && image[1] == 0x00)
+            {
+                //mp4
+                return true;
+            }
+            return false;
+        }
+
+        internal static byte[] decryptECB(byte[] image)
+        {
+            using (RijndaelManaged rm = new RijndaelManaged())
+            {
+                rm.Mode = CipherMode.ECB;
+                rm.Key = Convert.FromBase64String(BLOB_KEY);
+                rm.IV = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                rm.Padding = PaddingMode.Zeros;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(image, 0, image.Length);
+                        return ms.ToArray();
+                    }
+                }
+            }
+        }
+
+        internal static byte[] decryptCBC(byte[] image, string key, string iv)
+        {
+            using (RijndaelManaged rm = new RijndaelManaged())
+            {
+                rm.Mode = CipherMode.CBC;
+                rm.Key = Convert.FromBase64String(key);
+                rm.IV = Convert.FromBase64String(iv);
+                rm.Padding = PaddingMode.Zeros;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, rm.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(image, 0, image.Length);
+                        return ms.ToArray();
+                    }
+                }
+            }
         }
     }
 }
