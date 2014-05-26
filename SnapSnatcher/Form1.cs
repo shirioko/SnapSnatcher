@@ -124,7 +124,6 @@ namespace SnapSnatcher
             
             //hide
             this.Visible = false;
-            this.ShowInTaskbar = false;
 
             this.snapconnector = new SnapConnector(this.username, this.authToken, this.reqToken);
 
@@ -192,8 +191,8 @@ namespace SnapSnatcher
                                     {
                                         image = decryptECB(image);
                                     }
-                                    this.SaveMedia(image, snap);
-                                    this.NotifyTray(snap);
+                                    string filename = this.SaveMedia(image, snap);
+                                    this.NotifyTray(snap, filename);
                                 }
                                 catch (WebException w)
                                 {
@@ -222,8 +221,11 @@ namespace SnapSnatcher
                                 try
                                 {
                                     byte[] image = this.snapconnector.GetStoryMedia(story.media_id, story.media_key, story.media_iv);
-                                    this.SaveMedia(image, story);
-                                    this.NotifyTray(story);
+                                    string filename = this.SaveMedia(image, story);
+                                    if (!string.IsNullOrEmpty(filename))
+                                    {
+                                        this.NotifyTray(story, filename);
+                                    }
                                 }
                                 catch (WebException w)
                                 {
@@ -324,54 +326,80 @@ namespace SnapSnatcher
             }
         }
 
-        protected delegate void NotifySnapDelegate(JsonClasses.Snap snap);
-        protected delegate void NotifyStoryDelegate(JsonClasses.Story storyu);
+        protected delegate void NotifySnapDelegate(JsonClasses.Snap snap, string file);
+        protected delegate void NotifyStoryDelegate(JsonClasses.Story story, string file);
 
-        protected void NotifyTray(JsonClasses.Snap snap)
+        protected void NotifyTray(JsonClasses.Snap snap, string file)
         {
             
             if (this.InvokeRequired)
             {
                 NotifySnapDelegate d = new NotifySnapDelegate(NotifyTray);
-                this.Invoke(d, snap);
+                this.Invoke(d, snap, file);
             }
             else
             {
                 this.unseenCounter++;
-                this.notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
-                this.notifyIcon1.BalloonTipTitle = string.Format("SnapSnatcher({0})", this.unseenCounter);
-                this.notifyIcon1.BalloonTipText = string.Format("New snap from {0}!", snap.sn);
-                notifyIcon1.ShowBalloonTip(5000);
+                this.fileToOpen = file;
+                this._notifyTray(string.Format("New snap from {0}!", snap.sn),
+                    this.getNotifyPreview(file));
                 this.UpdateNotifyText();
             }
         }
 
-        protected void NotifyTray(JsonClasses.Story story)
+        protected void NotifyTray(JsonClasses.Story story, string file)
         {
             
             if (this.InvokeRequired)
             {
                 NotifyStoryDelegate d = new NotifyStoryDelegate(NotifyTray);
-                this.Invoke(d, story);
+                this.Invoke(d, story, file);
             }
             else
             {
                 this.unseenCounter++;
-                this.notifyIcon1.BalloonTipIcon = ToolTipIcon.Info;
-                this.notifyIcon1.BalloonTipTitle = string.Format("SnapSnatcher({0})", this.unseenCounter);
-                this.notifyIcon1.BalloonTipText = string.Format("New story update from {0}!", story.username);
-                notifyIcon1.ShowBalloonTip(5000);
+                this.fileToOpen = file;
+                this._notifyTray(string.Format("New story update from {0}!", story.username),
+                    this.getNotifyPreview(file));
                 this.UpdateNotifyText();
             }
         }
 
-        private void SaveMedia(byte[] image, JsonClasses.Snap snap)
+        protected void _notifyTray(string text, Bitmap img)
+        {
+            NotifyIcon nic = new NotifyIcon();
+            nic.ShowBalloon(1, 
+                img.GetHicon(), 
+                string.Format("SnapSnatcher({0})", this.unseenCounter), 
+                text,
+                5000);
+        }
+
+        protected Bitmap getNotifyPreview(string file)
+        {
+
+            Bitmap source = new Bitmap(file);
+
+            //crop square
+            int size = source.Width;
+            Bitmap dest = source.Clone(new Rectangle(
+                new Point(0, 0),
+                new Size(size, size)
+                ), source.PixelFormat);
+
+            Bitmap icon = new Bitmap(dest, 32, 32);
+
+            return icon;
+        }
+
+        private string SaveMedia(byte[] image, JsonClasses.Snap snap)
         {
             string filename = Path.Combine(this.path, string.Format("{0}-{1}.{2}", snap.sn, snap.id, snap.m == 0 ? "jpg" : "mov"));
             File.WriteAllBytes(filename, image);
+            return filename;
         }
 
-        private void SaveMedia(byte[] image, JsonClasses.Story story)
+        private string SaveMedia(byte[] image, JsonClasses.Story story)
         {
             if (story.zipped)
             {
@@ -381,7 +409,9 @@ namespace SnapSnatcher
             {
                 string filename = Path.Combine(this.path, string.Format("{0}.{1}", story.id, story.media_type == 0 ? "jpg" : "mov"));
                 File.WriteAllBytes(filename, image);
+                return filename;
             }
+            return string.Empty;
         }
 
         protected byte[] Unzip(byte[] zipData)
@@ -441,14 +471,12 @@ namespace SnapSnatcher
         {
             this.Visible = false;
             this.WindowState = FormWindowState.Normal;
-            this.ShowInTaskbar = false;
         }
 
         protected void Restore()
         {
             this.unseenCounter = 0;
             this.UpdateNotifyText();
-            this.ShowInTaskbar = true;
             this.Visible = true;
             this.Refresh();
             this.Focus();
@@ -512,7 +540,27 @@ namespace SnapSnatcher
 
         private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
         {
-            this.OpenSnapsFolder();
+            //this.OpenSnapsFolder();
+            this.OpenImage();
+        }
+
+        protected string fileToOpen;
+
+        protected void OpenImage()
+        {
+            if (!string.IsNullOrEmpty(this.fileToOpen))
+            {
+                try
+                {
+                    Process.Start(this.fileToOpen);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            this.unseenCounter = 0;
+            this.UpdateNotifyText();
         }
 
         private void btnStop_Click(object sender, EventArgs e)

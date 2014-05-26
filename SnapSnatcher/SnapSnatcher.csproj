@@ -89,6 +89,7 @@
     </Compile>
     <Compile Include="JsonClasses\Snap.cs" />
     <Compile Include="JsonClasses\Story.cs" />
+    <Compile Include="NotifyIcon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnapConnector.cs" />
