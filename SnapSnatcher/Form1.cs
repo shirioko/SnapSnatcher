@@ -95,6 +95,12 @@ namespace SnapSnatcher
             this.txtUsername.Text = this.username;
             this.txtToken.Text = this.authToken;
             this.txtReqToken.Text = this.reqToken;
+            if (this.autoStart && !string.IsNullOrEmpty(this.username) &&
+                (!string.IsNullOrEmpty(this.authToken) || !string.IsNullOrEmpty(this.reqToken)))
+            {
+                //autostart hack
+                this.Opacity = 0;
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -558,6 +564,7 @@ namespace SnapSnatcher
             {
                 //autostart
                 this.Start();
+                this.Opacity = 100;
             }
         }
     }
