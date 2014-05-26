@@ -80,6 +80,12 @@ namespace SnapSnatcher
             {
                 this.autoStart = false;
             }
+
+            if (this.autoStart)
+            {
+                this.Visible = false;
+            }
+
             InitializeComponent();
         }
 
@@ -89,12 +95,6 @@ namespace SnapSnatcher
             this.txtUsername.Text = this.username;
             this.txtToken.Text = this.authToken;
             this.txtReqToken.Text = this.reqToken;
-            if(this.autoStart && !string.IsNullOrEmpty(this.username) &&
-                (!string.IsNullOrEmpty(this.authToken) || !string.IsNullOrEmpty(this.reqToken)))
-            {
-                //autostart
-                this.Start();
-            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -121,7 +121,7 @@ namespace SnapSnatcher
             this.btnStop.Visible = true;
             
             //hide
-            this.Visible = false;
+            this.Minimize();
 
             this.snapconnector = new SnapConnector(this.username, this.authToken, this.reqToken);
 
@@ -415,6 +415,7 @@ namespace SnapSnatcher
         protected void Minimize()
         {
             this.Visible = false;
+            this.Opacity = 0;
             this.WindowState = FormWindowState.Normal;
         }
 
@@ -423,6 +424,7 @@ namespace SnapSnatcher
             this.unseenCounter = 0;
             this.UpdateNotifyText();
             this.Visible = true;
+            this.Opacity = 100;
             this.Refresh();
             this.Focus();
         }
@@ -546,6 +548,16 @@ namespace SnapSnatcher
                 this.dlStories = s.dlStories;
                 this.autoStart = s.autoStart;
                 this.path = s.path;
+            }
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            if (this.autoStart && !string.IsNullOrEmpty(this.username) &&
+                (!string.IsNullOrEmpty(this.authToken) || !string.IsNullOrEmpty(this.reqToken)))
+            {
+                //autostart
+                this.Start();
             }
         }
     }
